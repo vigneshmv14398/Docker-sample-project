@@ -1,32 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Voting App</title>
+  <title>Voting App</title>
 </head>
 <body>
-    <h1>Vote for Cats or Dogs 🐱🐶</h1>
-    <button onclick="vote('cats')">Cats</button>
-    <button onclick="vote('dogs')">Dogs</button>
-    <h2 id="results"></h2>
+  <h1>Vote for Your Favorite!</h1>
+  <button onclick="castVote('cats')">Cats</button>
+  <button onclick="castVote('dogs')">Dogs</button>
 
-    <script>
-        async function vote(choice) {
-            await fetch("http://localhost:5000/vote", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({choice})
-            });
-            getResults();
+  <h2 id="status"></h2>
+
+  <script>
+    async function castVote(choice) {
+      try {
+        let response = await fetch("http://localhost:5000/vote", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ choice })
+        });
+        if (response.ok) {
+          document.getElementById("status").innerText = "Vote cast for " + choice;
+        } else {
+          document.getElementById("status").innerText = "Error casting vote";
         }
-
-        async function getResults() {
-            let res = await fetch("http://localhost:5000/results");
-            let data = await res.json();
-            document.getElementById("results").innerText =
-                `Cats: ${data.cats} | Dogs: ${data.dogs}`;
-        }
-
-        getResults();
-    </script>
+      } catch (err) {
+        document.getElementById("status").innerText = "Error: " + err;
+      }
+    }
+  </script>
 </body>
 </html>

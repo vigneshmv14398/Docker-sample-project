@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import redis
 
 app = Flask(__name__)
+CORS(app)
 r = redis.Redis(host="redis", port=6379, db=0)
 
 @app.route("/vote", methods=["POST"])
